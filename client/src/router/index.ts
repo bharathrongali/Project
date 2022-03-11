@@ -6,7 +6,6 @@ import Generic from '../pages/Generic.vue';
 import Login from '../pages/Login.vue';
 import session from "../models/session";
 import AssignedTasks from "../pages/AssignedTasks.vue";
-import AllTasks from "../pages/AllTasks.vue"
 
 // 2. Define some routes
 // Each route should map to a component.
@@ -19,7 +18,6 @@ const routes: RouteRecordRaw[] = [
   { path: '/about', component: Generic, props: { title: 'About Page!' } },
   { path: '/contact', component: Generic, props: { title: 'Contact Page!' } },
   { path: '/assignedtasks', component: AssignedTasks },
-  { path: '/viewAllTasks', component: AllTasks }
 ]
 
 // 3. Create the router instance and pass the `routes` option
