@@ -11,7 +11,6 @@ const isOpen = ref(false);
     <div class="container">
       <div class="navbar-brand">
         <a class="navbar-item" href="https://bulma.io">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtyeQE54Jv9fOntKovJog5Bb2546ZpQM_WUQ&usqp=CAU" width="30" height="30" />
         </a>
         <a
           role="button"
@@ -41,10 +40,10 @@ const isOpen = ref(false);
             <a class="navbar-link">More</a>
             <div class="navbar-dropdown">
               <router-link class="navbar-item" to="/about">About</router-link>
-              <a class="navbar-item">Jobs</a>
+              
               <router-link class="navbar-item" to="/contact">Contact</router-link>
               <hr class="navbar-divider" />
-              <a class="navbar-item">Report an issue</a>
+              
             </div>
           </div>
         </div>
