@@ -56,7 +56,7 @@ function taskHandler(this: any, currentTab : any){
 
 <template>
   <div class="section">
-    <div class="container">
+    <div class="">
       <div class="columns">
         <div class="column">
           <div class="panel">

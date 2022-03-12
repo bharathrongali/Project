@@ -14,18 +14,18 @@ const isOpen = ref(false);
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">Tasks</a>
             <div class="navbar-dropdown">
-              <router-link class="navbar-item" to="/assignedtasks">Tasks Assigned</router-link>
-              <router-link class="navbar-item" to="/viewAllTasks">All Tasks</router-link>
+              <router-link class="navbar-item" to="/assignedtasks">View Tasks</router-link>
+              <!-- <router-link class="navbar-item" to="/viewAllTasks">All Tasks</router-link> -->
             </div>
           </div>
-          <div class="navbar-item has-dropdown is-hoverable">
+          <!-- <div iv class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">More</a>
             <div class="navbar-dropdown">
               <router-link class="navbar-item" to="/about">About</router-link>
               <hr class="navbar-divider" />
               <router-link class="navbar-item" to="/contact">Report an issue</router-link>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
