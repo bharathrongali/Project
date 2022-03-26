@@ -1,5 +1,24 @@
 <script setup lang="ts">
-	//
+
+import { ref } from 'vue';
+import { session } from '../models/session';
+import { users } from '../models/users';
+import router from '../router';
+
+const username = ref('');
+const password = ref('');
+
+const login = () => {
+	const valid = users.value.filter(u => u.username === username.value && u.password === password.value).length > 0;
+	if(valid) {
+		session.username = username.value;
+		session.isLoggedIn = true;
+		router.push('/tasks');
+	} else {
+		username.value = 'Invalid Credentials';
+	}
+};
+
 </script>
 
 <template>
@@ -7,9 +26,9 @@
 		<div class="columns is-gapeless">
 			<div class="column is-half leftCol">
 				<div class="loginLabel">Log In</div>
-				<input class="input" type="text" placeholder="Username" />
-				<input class="input" type="password" placeholder="Password" />
-				<button class="button">Log In</button>
+				<input class="input" type="text" placeholder="Username" v-model="username" />
+				<input class="input" type="password" placeholder="Password" v-model="password" />
+				<button class="button" @click="login">Log In</button>
 			</div>
 			<div class="column is-half rightCol">
 				<div class="todoLabel">To Do App</div>
@@ -39,13 +58,18 @@ div.card {
 				top: 100px;
 			}
 
-			input, button {
+			input,
+			button {
 				width: 80%;
 				margin-top: 30px;
 			}
+
+			button {
+				font-weight: 600;
+			}
 		}
 		.rightCol {
-			background: linear-gradient(to right, #FF4B2B, #FF416C);
+			background: linear-gradient(to right, #ff4b2b, #ff416c);
 			background-repeat: no-repeat;
 			background-size: cover;
 			border-radius: 0px 5px 5px 0;
@@ -63,5 +87,4 @@ div.card {
 		}
 	}
 }
-
 </style>
