@@ -7,15 +7,17 @@ import router from '../router';
 
 const username = ref('');
 const password = ref('');
+const wrong = ref('');
 
 const login = () => {
 	const valid = users.value.filter(u => u.username === username.value && u.password === password.value).length > 0;
+	wrong.value = '';
 	if(valid) {
 		session.username = username.value;
 		session.isLoggedIn = true;
 		router.push('/tasks');
 	} else {
-		username.value = 'Invalid Credentials';
+		wrong.value = 'Invalid Credentials';
 	}
 };
 
@@ -29,6 +31,7 @@ const login = () => {
 				<input class="input" type="text" placeholder="Username" v-model="username" />
 				<input class="input" type="password" placeholder="Password" v-model="password" />
 				<button class="button" @click="login">Log In</button>
+				<p>{{wrong}}</p>
 			</div>
 			<div class="column is-half rightCol">
 				<div class="todoLabel">To Do App</div>
@@ -66,6 +69,12 @@ div.card {
 
 			button {
 				font-weight: 600;
+			}
+
+			p {
+				color: red;
+				position: absolute;
+				top: 480px;
 			}
 		}
 		.rightCol {
