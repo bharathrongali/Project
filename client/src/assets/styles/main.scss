@@ -1,9 +1,16 @@
-.navbar {
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,800');
 
-    .is-active {
-       border-color: #FFFFFF;
-       border-bottom-width: 3px;
-       border-bottom-style: solid;
-     }
-   }
-   
+* {
+	box-sizing: border-box;
+	font-family: 'Montserrat';
+}
+
+body {
+	background: #f6f5f7;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	font-family: 'Montserrat', sans-serif;
+	height: 100vh;
+}
