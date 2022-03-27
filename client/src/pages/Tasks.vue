@@ -14,9 +14,48 @@ const tabClass = (tab: string) => tab === currentTab.value ? 'tabLink activeTab'
 		<div :class="tabClass(tab)" v-for="tab in tabs" @click="() => currentTab = tab">{{ tab }}</div>
 	</div>
 	<div class="add card">Add</div>
+	<div class="tasks">
+		<div class="half">
+			<div class="heading">TODO</div>
+		</div>
+		<div class="half">
+			<div class="heading">DONE</div>
+		</div>
+	</div>
 </template>
 
 <style scoped lang="scss">
+.tasks {
+	position: absolute;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	top: 350px;
+	left: 50px;
+	right: 50px;
+	height: 60%;
+	border: rgb(231, 231, 231) 1px solid;
+	border-radius: 5px;
+
+	.heading {
+		position: absolute;
+		font-size: 18px;
+		font-weight: 800;
+		height: 50px;
+		line-height: 50px;
+		top: 0;
+		color: rgb(161, 161, 161);
+	}
+
+	.half {
+		height: calc(100%);
+		width: calc(50%);
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+	}
+}
 .tabs {
 	position: absolute;
 	left: 50%;
