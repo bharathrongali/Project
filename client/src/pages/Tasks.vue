@@ -17,9 +17,21 @@ const tabClass = (tab: string) => tab === currentTab.value ? 'tabLink activeTab'
 	<div class="tasks">
 		<div class="half">
 			<div class="heading">TODO</div>
+			<div class="taskList">
+				<div class="card task">
+					<div class="title">Title</div>
+					<div class="for">Bob</div>
+					<div class="date">20-04-2022</div>
+					<div class="field">
+						<label>Done</label>
+						<input type="checkbox" />
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class="half">
 			<div class="heading">DONE</div>
+			<div class="taskList"></div>
 		</div>
 	</div>
 </template>
@@ -38,22 +50,66 @@ const tabClass = (tab: string) => tab === currentTab.value ? 'tabLink activeTab'
 	border: rgb(231, 231, 231) 1px solid;
 	border-radius: 5px;
 
-	.heading {
-		position: absolute;
-		font-size: 18px;
-		font-weight: 800;
-		height: 50px;
-		line-height: 50px;
-		top: 0;
-		color: rgb(161, 161, 161);
-	}
-
 	.half {
 		height: calc(100%);
 		width: calc(50%);
 		display: flex;
 		align-items: center;
 		flex-direction: column;
+
+		.heading {
+			position: absolute;
+			font-size: 18px;
+			font-weight: 800;
+			height: 50px;
+			line-height: 50px;
+			top: 0;
+			color: rgb(161, 161, 161);
+		}
+
+		.taskList {
+			top: 50px;
+			position: relative;
+			display: flex;
+			height: calc(100% - 50px);
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			.task {
+				height: 40px;
+				width: 95%;
+				display: flex;
+				justify-content: space-between;
+				flex-direction: row;
+				align-items: center;
+				margin-top: 10px;
+
+				.title {
+					margin: 0;
+					font-size: 18px;
+					font-weight: 600;
+					padding: 10px;
+				}
+
+				.date, .for {
+					font-weight: 500;
+					color: rgb(167, 167, 167);
+				}
+
+				.field {
+					label {
+						font-weight: 500;
+					}
+
+					input {
+						margin-right: 20px;
+						margin-left: 10px;
+					}
+				}
+			}
+		}
 	}
 }
 .tabs {
