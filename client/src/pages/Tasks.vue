@@ -1,10 +1,34 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { session } from '../models/session';
+import { ITask, tasks } from '../models/tasks';
+import router from '../router';
+
+if(!session.isLoggedIn) router.push('/');
 
 const tabs = ['Assigned', 'Created', 'All'];
 const currentTab = ref(tabs[0]);
 
 const tabClass = (tab: string) => tab === currentTab.value ? 'tabLink activeTab' : 'tabLink';
+
+const getTasks = (e: ITask[], done: boolean): ITask[] => {
+	if(currentTab.value == tabs[0])
+		if(done)
+			return e.filter(t => t.for === session.username && t.done);
+		else
+			return e.filter(t => t.for === session.username && !t.done);
+
+	if(currentTab.value == tabs[1])
+		if(done)
+			return e.filter(t => t.by === session.username && t.done);
+		else
+			return e.filter(t => t.by === session.username && !t.done);
+
+	if(done)
+		return e.filter(t => t.done);
+	else
+		return e.filter(t => !t.done);
+}
 
 </script>
 
@@ -18,20 +42,30 @@ const tabClass = (tab: string) => tab === currentTab.value ? 'tabLink activeTab'
 		<div class="half">
 			<div class="heading">TODO</div>
 			<div class="taskList">
-				<div class="card task">
-					<div class="title">Title</div>
-					<div class="for">Bob</div>
-					<div class="date">20-04-2022</div>
+				<div class="card task" v-for="task in getTasks(tasks, false)">
+					<div class="title">{{task.title}}</div>
+					<div class="for">{{task.for}}</div>
+					<div class="date">{{task.date}} • {{task.by}}</div>
 					<div class="field">
 						<label>Done</label>
-						<input type="checkbox" />
+						<input type="checkbox" v-model="task.done" />
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="half">
 			<div class="heading">DONE</div>
-			<div class="taskList"></div>
+			<div class="taskList">
+				<div class="card task" v-for="task in getTasks(tasks, true)">
+					<div class="title">{{task.title}}</div>
+					<div class="for">{{task.for}}</div>
+					<div class="date">{{task.date}} • {{task.by}}</div>
+					<div class="field">
+						<label>Done</label>
+						<input type="checkbox" v-model="task.done" />
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -91,11 +125,14 @@ const tabClass = (tab: string) => tab === currentTab.value ? 'tabLink activeTab'
 					font-size: 18px;
 					font-weight: 600;
 					padding: 10px;
+					width: 200px;
 				}
 
 				.date, .for {
 					font-weight: 500;
 					color: rgb(167, 167, 167);
+					width: 200px;
+					text-align: center;
 				}
 
 				.field {
