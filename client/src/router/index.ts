@@ -5,7 +5,7 @@ import Tasks from '../pages/Tasks.vue';
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: Login },
-  { path: '/tasks', component: Login },
+  { path: '/tasks', component: Tasks },
 ]
 
 const router = createRouter({
