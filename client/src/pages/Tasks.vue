@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { endSession, session } from '../models/session';
+import { session } from '../models/session';
 import { users } from '../models/users';
 import { ITask, tasks } from '../models/tasks';
 import router from '../router';
+import NavBar from '../components/nav.vue';
 
 if(!session.isLoggedIn) router.push('/');
 
@@ -12,23 +13,15 @@ const currentTab = ref(tabs[0]);
 
 const tabClass = (tab: string) => tab === currentTab.value ? 'tabLink activeTab' : 'tabLink';
 
-const getTasks = (e: ITask[], done: boolean): ITask[] => {
+const getTasks = (e: ITask[]): ITask[] => {
+	e = e.sort((a, b) => a.done ? 1 : -1);
 	if(currentTab.value == tabs[0])
-		if(done)
-			return e.filter(t => t.for === session.username && t.done);
-		else
-			return e.filter(t => t.for === session.username && !t.done);
+		return e.filter(t => t.for === session.username);
 
 	if(currentTab.value == tabs[1])
-		if(done)
-			return e.filter(t => t.by === session.username && t.done);
-		else
-			return e.filter(t => t.by === session.username && !t.done);
+		return e.filter(t => t.by === session.username);
 
-	if(done)
-		return e.filter(t => t.done);
-	else
-		return e.filter(t => !t.done);
+	return e;
 }
 
 const modalState = ref<boolean>(false);
@@ -51,14 +44,10 @@ const addTask = () => {
 	modalState.value = false;
 }
 
-const logout = () => {
-	endSession();
-	router.push('/');
-};
-
 </script>
 
 <template>
+	<NavBar />
 	<div :class="modalClass(modalState)">
   	<div class="modal-background" @click="()=>modalState=false"></div>
   	<div class="modal-content">
@@ -88,85 +77,26 @@ const logout = () => {
   	<button class="modal-close is-large" aria-label="close" @click="()=>modalState=false"></button>
 	</div>
 
-	<nav>
-		<div class="sessionContainer">
-			<img :src="users.filter(e => e.username === session.username)[0].avatar">
-			<p>{{ session.username }}</p>
-			<button @click="logout" class="button is-normal is-outlined">Log Out</button>
-		</div>
-	</nav>
-
 	<h1>T O D O</h1>
 	<div class="tabs card">
 		<div :class="tabClass(tab)" v-for="tab in tabs" @click="() => currentTab = tab">{{ tab }}</div>
 	</div>
 	<div class="add card" @click="() => modalState = true">Add</div>
 	<div class="tasks">
-		<div class="half">
-			<div class="heading">TODO</div>
-			<div class="taskList">
-				<div class="card task" v-for="task in getTasks(tasks, false)">
+		<div class="taskList">
+				<div class="card task" v-for="task in getTasks(tasks)" :key="task.title">
 					<div class="title">{{task.title}}</div>
 					<div class="for">{{task.for}}</div>
 					<div class="date">{{task.date}} • {{task.by}}</div>
 					<div class="field">
-						<label>Done</label>
 						<input type="checkbox" v-model="task.done" />
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="half">
-			<div class="heading">DONE</div>
-			<div class="taskList">
-				<div class="card task" v-for="task in getTasks(tasks, true)">
-					<div class="title">{{task.title}}</div>
-					<div class="for">{{task.for}}</div>
-					<div class="date">{{task.date}} • {{task.by}}</div>
-					<div class="field">
-						<label>Done</label>
-						<input type="checkbox" v-model="task.done" />
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
 </template>
 
 <style scoped lang="scss">
-
-nav {
-	display: flex;
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100px;
-	width: 100%;
-	background-color: transparent;
-
-	.sessionContainer {
-		display: flex;
-		position: absolute;
-		right: 0;
-		margin: 20px;
-
-		img {
-			width: 48px;
-			height: 48px;
-			border-radius: 50%;
-		}
-
-		p {
-			font-weight: 600;
-			margin: 10px 20px;
-		}
-
-		button {
-			font-weight: 500;
-		}
-	}
-}
-
 .modal-content {
 	width: 500px;
 	height: 600px;
@@ -222,66 +152,44 @@ nav {
 	border: rgb(231, 231, 231) 1px solid;
 	border-radius: 5px;
 
-	.half {
-		height: calc(100%);
-		width: calc(50%);
+	.taskList {
+		top: 50px;
+		position: relative;
 		display: flex;
-		align-items: center;
+		height: calc(100% - 50px);
+		width: 60%;
+		display: flex;
 		flex-direction: column;
+		align-items: center;
 
-		.heading {
-			position: absolute;
-			font-size: 18px;
-			font-weight: 800;
-			height: 50px;
-			line-height: 50px;
-			top: 0;
-			color: rgb(161, 161, 161);
-		}
-
-		.taskList {
-			top: 50px;
-			position: relative;
+		.task {
+			height: 40px;
+			width: 95%;
 			display: flex;
-			height: calc(100% - 50px);
-			width: 100%;
-			display: flex;
-			flex-direction: column;
+			justify-content: space-between;
+			flex-direction: row;
 			align-items: center;
+			margin-top: 10px;
 
-			.task {
-				height: 40px;
-				width: 95%;
-				display: flex;
-				justify-content: space-between;
-				flex-direction: row;
-				align-items: center;
-				margin-top: 10px;
+			.title {
+				margin: 0;
+				font-size: 18px;
+				font-weight: 600;
+				padding: 10px;
+				width: 200px;
+			}
 
-				.title {
-					margin: 0;
-					font-size: 18px;
-					font-weight: 600;
-					padding: 10px;
-					width: 200px;
-				}
+			.date, .for {
+				font-weight: 500;
+				color: rgb(167, 167, 167);
+				width: 200px;
+				text-align: center;
+			}
 
-				.date, .for {
-					font-weight: 500;
-					color: rgb(167, 167, 167);
-					width: 200px;
-					text-align: center;
-				}
-
-				.field {
-					label {
-						font-weight: 500;
-					}
-
-					input {
-						margin-right: 20px;
-						margin-left: 10px;
-					}
+			.field {
+				input {
+					margin-right: 20px;
+					margin-left: 10px;
 				}
 			}
 		}
