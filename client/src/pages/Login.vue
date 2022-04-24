@@ -30,7 +30,12 @@ const login = () => {
 				<div class="loginLabel">Log In</div>
 				<input class="input" type="text" placeholder="Username" v-model="username" />
 				<input class="input" type="password" placeholder="Password" v-model="password" />
-				<button class="button" @click="login">Log In</button>
+				<button class="button" @click="login">
+					<span class="icon is-small">
+						<i class="fa-solid fa-right-to-bracket"></i>
+					</span>
+					<span>Log In</span>
+				</button>
 				<p>{{wrong}}</p>
 			</div>
 			<div class="column is-half rightCol">

@@ -81,7 +81,12 @@ const addTask = () => {
 	<div class="tabs card">
 		<div :class="tabClass(tab)" v-for="tab in tabs" @click="() => currentTab = tab">{{ tab }}</div>
 	</div>
-	<div class="add card" @click="() => modalState = true">Add</div>
+	<button class="button add" @click="() => modalState = true">
+		<span class="icon is-small">
+				<i class="fa-solid fa-plus"></i>
+			</span>
+			<span>Add</span>
+	</button>
 	<div class="tasks">
 		<div class="taskList">
 				<div class="card task" v-for="task in getTasks(tasks)" :key="task.title">
@@ -232,15 +237,6 @@ const addTask = () => {
 	width: 100px;
 	height: 40px;
 	font-weight: 600;
-	cursor: pointer;
-	color: rgb(41, 41, 41);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	&:hover {
-		transform: scale(1.05);
-	}
 }
 
 h1 {
