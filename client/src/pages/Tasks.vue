@@ -32,6 +32,8 @@ const gotoAdd = () => {
 <template>
 	<NavBar />
 
+	<img class="backImg" src="../assets/tasks_img.png">
+
 	<h1>T O D O</h1>
 	<div class="tabs card">
 		<div :class="tabClass(tab)" v-for="tab in tabs" @click="() => currentTab = tab">{{ tab }}</div>
@@ -67,8 +69,6 @@ const gotoAdd = () => {
 	left: 50px;
 	right: 50px;
 	height: 60%;
-	border: rgb(231, 231, 231) 1px solid;
-	border-radius: 5px;
 
 	.taskList {
 		top: 50px;
@@ -112,6 +112,16 @@ const gotoAdd = () => {
 			}
 		}
 	}
+}
+
+.backImg {
+	width: 800px;
+	height: 800px;
+	position: absolute;
+	top: 50%;
+	left: 10%;
+	transform: translate(0, -50%);
+	opacity: 0.2;
 }
 .tabs {
 	position: absolute;
