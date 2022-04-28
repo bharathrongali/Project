@@ -2,16 +2,28 @@
 
 import { ref } from 'vue';
 import { session } from '../models/session';
-import { users } from '../models/users';
+import { users, getRandomAvatar } from '../models/users';
 import router from '../router';
 
 const username = ref('');
 const password = ref('');
+const confirm = ref('');
 const wrong = ref('');
 
+const intf = ref(false);
+
+const label = ["Log In", "Sign Up"];
+
 const login = () => {
-	const valid = users.value.filter(u => u.username === username.value && u.password === password.value).length > 0;
 	wrong.value = '';
+
+	if(username.value === '' || password.value === '') {
+		wrong.value = 'Empty field(s)';
+		return;
+	}
+
+	const valid = users.value.filter(u => u.username === username.value && u.password === password.value).length > 0;
+
 	if(valid) {
 		session.username = username.value;
 		session.isLoggedIn = true;
@@ -21,84 +33,122 @@ const login = () => {
 	}
 };
 
+const signup = () => {
+	wrong.value = '';
+
+	if(username.value === '' || password.value === '' || confirm.value === '') {
+		wrong.value = 'Empty field(s)';
+		return;
+	}
+
+	if(password.value !== confirm.value) {
+		wrong.value = "Passwords don't match";
+		return;
+	}
+
+	users.value.push({
+		avatar: getRandomAvatar(),
+		password: password.value,
+		username: username.value
+	});
+
+	wrong.value = "Sign Up Successful, Now you may login";
+
+	username.value = '';
+	password.value = '';
+	confirm.value = '';
+
+	intf.value = false;
+};
+
+const action = () => {
+	if (intf.value === false) return login();
+	signup();
+}
+
+const changeInterface = () => intf.value = !intf.value;
+
 </script>
 
 <template>
+	<img class="Img" src="../assets/login_img.png">
 	<div class="card">
-		<div class="columns is-gapeless">
-			<div class="column is-half leftCol">
-				<div class="loginLabel">Log In</div>
-				<input class="input" type="text" placeholder="Username" v-model="username" />
-				<input class="input" type="password" placeholder="Password" v-model="password" />
-				<button class="button" @click="login">
-					<span class="icon is-small">
-						<i class="fa-solid fa-right-to-bracket"></i>
-					</span>
-					<span>Log In</span>
-				</button>
-				<p>{{wrong}}</p>
-			</div>
-			<div class="column is-half rightCol">
-				<div class="todoLabel">To Do App</div>
-			</div>
+		<div class="loginLabel">{{ label[+intf] }}</div>
+		<div class="frm">
+			<input class="input" type="text" placeholder="Username" v-model="username" />
+			<input class="input" type="password" placeholder="Password" v-model="password" />
+			<input v-if="intf === true" class="input" type="password" placeholder="Confirm" v-model="confirm" />
+			<button class="button" @click="action">
+				<span class="icon is-small">
+					<i class="fa-solid fa-right-to-bracket"></i>
+				</span>
+				<span>{{ label[+intf] }}</span>
+			</button>
+			<button class="button is-ghost ghost" @click="changeInterface">
+				{{ label[+(!intf)] }} ?
+			</button>
+			<p>{{wrong}}</p>
 		</div>
 	</div>
 </template>
 
 <style scoped lang="scss">
+.Img {
+	position: absolute;
+	top: 50%;
+	right: 35%;
+	transform: translate(50%, -50%);
+}
 div.card {
-	height: 700px;
-	width: 800px;
+	height: 340px;
+	width: 400px;
 	background-color: white;
+	box-shadow: none;
+	position: absolute;
+	top: 45%;
+	left: 10%;
+	transform: translate(0, -50%);
+	.loginLabel {
+		font-size: 48px;
+		font-weight: 800;
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
+	}
 
-	.columns {
-		height: 100%;
-
-		.leftCol {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			flex-direction: column;
-			.loginLabel {
-				font-size: 48px;
-				font-weight: 800;
-				position: absolute;
-				top: 100px;
-			}
-
-			input,
-			button {
-				width: 80%;
-				margin-top: 30px;
-			}
-
-			button {
-				font-weight: 600;
-			}
-
-			p {
-				color: red;
-				position: absolute;
-				top: 480px;
-			}
+	.frm {
+		position: absolute;
+		top: 100px;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 80%;
+		
+		input,
+		button {
+			width: 100%;
+			margin-top: 30px;
 		}
-		.rightCol {
-			background: linear-gradient(to right, #ff4b2b, #ff416c);
-			background-repeat: no-repeat;
-			background-size: cover;
-			border-radius: 0px 5px 5px 0;
-			background-position: 0 0;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			flex-direction: column;
+	
+		button {
+			font-weight: 600;
+		}
 
-			.todoLabel {
-				font-size: 36px;
-				font-weight: 600;
-				color: white;
-			}
+		.ghost:focus:not(:focus-visible) {
+			outline: 0;
+			box-shadow: none;
+		}
+	
+		p {
+			width: 100%;
+			text-align: center;
+			color: red;
+			position: absolute;
+			top: 380px;
+			left: 50%;
+			transform: translateX(-50%);
 		}
 	}
+
 }
 </style>

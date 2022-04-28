@@ -18,3 +18,9 @@ export const users = ref<IUser[]>([
 		avatar: "https://randomuser.me/api/portraits/men/8.jpg"
 	},
 ]);
+
+export const getRandomAvatar = () => {
+	const { random, floor } = Math;
+	const n = floor(random() * 100);
+	return `https://randomuser.me/api/portraits/men/${n}.jpg`;
+}
