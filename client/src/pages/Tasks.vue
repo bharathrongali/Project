@@ -5,19 +5,20 @@ import { ITask, tasks } from '../models/tasks';
 import router from '../router';
 import NavBar from '../components/nav.vue';
 
-if(!session.isLoggedIn) router.push('/');
+if(!session.isLoggedIn) {
+	router.push('/');
+}
+const tabsList = ['Assigned', 'Created', 'All'];
+const curTab = ref(tabsList[0]);
 
-const tabs = ['Assigned', 'Created', 'All'];
-const currentTab = ref(tabs[0]);
+const getTabCls = (tab: string) => tab === curTab.value ? 'tabLink activeTab' : 'tabLink';
 
-const tabClass = (tab: string) => tab === currentTab.value ? 'tabLink activeTab' : 'tabLink';
-
-const getTasks = (e: ITask[]): ITask[] => {
+const fetchTodos = (e: ITask[]): ITask[] => {
 	e = e.sort((a, b) => a.done ? 1 : -1);
-	if(currentTab.value == tabs[0])
+	if(curTab.value == tabsList[0])
 		return e.filter(t => t.for === session.username);
 
-	if(currentTab.value == tabs[1])
+	if(curTab.value == tabsList[1])
 		return e.filter(t => t.by === session.username);
 
 	return e;
@@ -36,7 +37,7 @@ const gotoAdd = () => {
 
 	<h1>T O D O</h1>
 	<div class="tabs card">
-		<div :class="tabClass(tab)" v-for="tab in tabs" @click="() => currentTab = tab">{{ tab }}</div>
+		<div :class="getTabCls(tab)" v-for="tab in tabsList" @click="() => curTab = tab">{{ tab }}</div>
 	</div>
 	<button class="button add" @click="gotoAdd">
 		<span class="icon is-small">
@@ -46,7 +47,7 @@ const gotoAdd = () => {
 	</button>
 	<div class="tasks">
 		<div class="taskList">
-				<div class="card task" v-for="task in getTasks(tasks)" :key="task.title">
+				<div class="card task" v-for="task in fetchTodos(tasks)" :key="task.title">
 					<div class="title">{{task.title}}</div>
 					<div class="for">{{task.for}}</div>
 					<div class="date">{{task.date}} • {{task.by}}</div>
