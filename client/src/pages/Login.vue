@@ -1,154 +1,61 @@
 <script setup lang="ts">
+    import { ref } from 'vue';
+    import { useSession } from '../models/session';
+    const session = useSession();
 
-import { ref } from 'vue';
-import { session } from '../models/session';
-import { users, getRandomAvatar } from '../models/users';
-import router from '../router';
+    const email = ref('');
+    const password = ref('');
 
-const username = ref('');
-const password = ref('');
-const confirm = ref('');
-const wrong = ref('');
-
-const intf = ref(false);
-
-const label = ["Log In", "Sign Up"];
-
-const login = () => {
-	wrong.value = '';
-
-	if(username.value === '' || password.value === '') {
-		wrong.value = 'Empty field(s)';
-		return;
-	}
-
-	const valid = users.value.filter(u => u.username === username.value && u.password === password.value).length > 0;
-
-	if(valid) {
-		session.username = username.value;
-		session.isLoggedIn = true;
-		router.push('/tasks');
-	} else {
-		wrong.value = 'Invalid Credentials';
-	}
-};
-
-const signup = () => {
-	wrong.value = '';
-
-	if(username.value === '' || password.value === '' || confirm.value === '') {
-		wrong.value = 'Empty field(s)';
-		return;
-	}
-
-	if(password.value !== confirm.value) {
-		wrong.value = "Passwords don't match";
-		return;
-	}
-
-	users.value.push({
-		avatar: getRandomAvatar(),
-		password: password.value,
-		username: username.value
-	});
-
-	wrong.value = "Sign Up Successful, Now you may login";
-
-	username.value = '';
-	password.value = '';
-	confirm.value = '';
-
-	intf.value = false;
-};
-
-const action = () => {
-	if (intf.value === false) return login();
-	signup();
-}
-
-const changeInterface = () => intf.value = !intf.value;
-
+    function login()
+    {
+        session.Login(email.value, password.value);
+    }
 </script>
 
 <template>
-	<img class="Img" src="../assets/login_img.png">
-	<div class="card">
-		<div class="loginLabel">{{ label[+intf] }}</div>
-		<div class="frm">
-			<input class="input" type="text" placeholder="Username" v-model="username" />
-			<input class="input" type="password" placeholder="Password" v-model="password" />
-			<input v-if="intf === true" class="input" type="password" placeholder="Confirm" v-model="confirm" />
-			<button class="button" @click="action">
-				<span class="icon is-small">
-					<i class="fa-solid fa-right-to-bracket"></i>
-				</span>
-				<span>{{ label[+intf] }}</span>
-			</button>
-			<button class="button is-ghost ghost" @click="changeInterface">
-				{{ label[+(!intf)] }} ?
-			</button>
-			<p>{{wrong}}</p>
-		</div>
-	</div>
+    <div class="section">
+
+        <div class="columns">
+            <div class="column is-half is-offset-one-quarter">
+
+
+        <div class="card">
+            <form class="card-content" @submit.prevent="login">
+                <h1 class="title">Login Page</h1>
+                    <div class="field">
+                    <p class="control has-icons-left has-icons-right">
+                        <input class="input" type="email" placeholder="Email" v-model="email">
+                        <span class="icon is-small is-left">
+                        <i class="fas fa-envelope"></i>
+                        </span>
+                        <span class="icon is-small is-right">
+                        <i class="fas fa-check"></i>
+                        </span>
+                    </p>
+                    </div>
+                    <div class="field">
+                    <p class="control has-icons-left">
+                        <input class="input" type="password" placeholder="Password" v-model="password">
+                        <span class="icon is-small is-left">
+                        <i class="fas fa-lock"></i>
+                        </span>
+                    </p>
+                    </div>
+                    <div class="field">
+                    <p class="control">
+                        <button class="button is-success">
+                        Login
+                        </button>
+                    </p>
+                    </div>
+            </form>
+        </div>
+            </div>
+    </div>
+    </div>
 </template>
 
-<style scoped lang="scss">
-.Img {
-	position: absolute;
-	top: 50%;
-	right: 35%;
-	transform: translate(50%, -50%);
-}
-div.card {
-	height: 340px;
-	width: 400px;
-	background-color: white;
-	box-shadow: none;
-	position: absolute;
-	top: 45%;
-	left: 10%;
-	transform: translate(0, -50%);
-	.loginLabel {
-		font-size: 48px;
-		font-weight: 800;
-		position: absolute;
-		top: 0;
-		left: 50%;
-		transform: translateX(-50%);
-	}
 
-	.frm {
-		position: absolute;
-		top: 100px;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 80%;
-		
-		input,
-		button {
-			width: 100%;
-			margin-top: 30px;
-		}
-	
-		button {
-			font-weight: 600;
-		}
+<style scoped>
 
-		.ghost:focus:not(:focus-visible) {
-			outline: 0;
-			box-shadow: none;
-		}
-	
-		p {
-			width: 100%;
-			text-align: center;
-			color: red;
-			position: absolute;
-			top: 380px;
-			left: 50%;
-			transform: translateX(-50%);
-		}
-	}
-
-}
 </style>
