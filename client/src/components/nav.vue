@@ -1,60 +1,87 @@
 <script setup lang="ts">
-	import { users } from '../models/users';
-	import { endSession, session } from '../models/session';
-	import router from '../router';
+import { ref } from 'vue';
+import { RouterLink } from "vue-router";
+import LoginBadge from './LoginBadge.vue';
+import Messages from './Messages.vue';
 
-	
-	const logout = () => {
-		endSession();
-		router.push('/');
-	};
+    
+    const isOpen = ref(false);
 </script>
 
 <template>
-	<nav>
-		<div class="sessionContainer">
-			<img :src="users.filter(e => e.username === session.username)[0].avatar">
-			<p>{{ session.username }}</p>
-			<button @click="logout" class="button is-normal is-outlined">
-				<span class="icon is-small">
-					<i class="fa-solid fa-right-from-bracket"></i>
-				</span>
-				<span>Log Out</span>
-			</button>
-		</div>
-	</nav>
+    <nav class="navbar is-info" role="navigation" aria-label="main navigation">
+
+        <div class="container">
+            <div class="navbar-brand">
+              <a class="navbar-item" href="https://bulma.io">
+                <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+              </a>
+              <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" :class="{ 'is-active': isOpen }" @click="isOpen = !isOpen">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+              </a>
+            </div>
+            <div class="navbar-menu"  :class="{ 'is-active': isOpen }">
+              <div class="navbar-start">
+                <router-link class="navbar-item" to="/">
+                  Home
+                </router-link>
+                <router-link class="navbar-item" to="/Wall">
+                  Wall
+                </router-link>
+                <router-link class="navbar-item" to="/weather">
+                  Weather
+                </router-link>
+                <div class="navbar-item has-dropdown is-hoverable">
+                  <a class="navbar-link">
+                    More
+                  </a>
+                  <div class="navbar-dropdown">
+                    <router-link class="navbar-item" to="/about">
+                      About
+                    </router-link>
+                    <a class="navbar-item">
+                      Jobs
+                    </a>
+                    <router-link class="navbar-item" to="/contact">
+                      Contact
+                    </router-link>
+                    <hr class="navbar-divider">
+                    <a class="navbar-item">
+                      Report an issue
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="navbar-end">
+
+            
+                <div class="navbar-item">
+                    <login-badge />
+                </div>
+
+                <messages />
+
+                <div class="navbar-item">
+                        <a class="bd-tw-button button" data-social-network="Twitter" data-social-action="tweet" data-social-target="https://bulma.io" target="_blank" href="https://twitter.com/intent/tweet?text=Bulma: a modern CSS framework based on Flexbox&amp;hashtags=bulmaio&amp;url=https://bulma.io&amp;via=jgthms">
+                          <span class="icon">
+                            <i class="fab fa-twitter"></i>
+                          </span>
+                          <span>
+                            Tweet
+                          </span>
+                        </a>
+
+                </div>
+              </div>
+
+            </div>
+        </div>
+      </nav>
+  
 </template>
 
-<style scoped lang="scss">
-nav {
-	display: flex;
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100px;
-	width: 100%;
-	background-color: transparent;
+<style>
 
-	.sessionContainer {
-		display: flex;
-		position: absolute;
-		right: 0;
-		margin: 20px;
-
-		img {
-			width: 48px;
-			height: 48px;
-			border-radius: 50%;
-		}
-
-		p {
-			font-weight: 600;
-			margin: 10px 20px;
-		}
-
-		button {
-			font-weight: 500;
-		}
-	}
-}
 </style>
