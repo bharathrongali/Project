@@ -1,19 +1,20 @@
 {
-  "name": "myassignment",
+  "name": "node_app",
   "version": "1.0.0",
-  "description": "<<<<<<< HEAD\r # About",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --watch server server/index.js",
+    "start": "node server/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Surya-Narayanan0503/MyAssignment.git"
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.5.0"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Surya-Narayanan0503/MyAssignment/issues"
-  },
-  "homepage": "https://github.com/Surya-Narayanan0503/MyAssignment#readme"
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
 }
