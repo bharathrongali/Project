@@ -4,7 +4,7 @@ import { session } from '../models/session';
 import { ITask, tasks } from '../models/tasks';
 import router from '../router';
 import NavBar from '../components/nav.vue';
-import { getTasks } from '../models/request';
+import { getTasks, setTask } from '../models/request';
 
 if(session.loggedIn) {
 	getTasks().then(() => {
@@ -55,7 +55,7 @@ const gotoAdd = () => {
 					<div class="for">{{task.for}}</div>
 					<div class="date">{{task.date}} • {{task.by}}</div>
 					<div class="field">
-						<input type="checkbox" v-model="task.done" />
+						<input type="checkbox" v-model="task.done" @click="setTask({...task, done: !task.done})" />
 					</div>
 				</div>
 			</div>

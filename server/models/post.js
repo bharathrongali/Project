@@ -54,31 +54,29 @@ async function remove(id) {
 	return includeUser(post.value);
 }
 
-async function update(id, newPost) {
-	newPost = await collection.findOneAndUpdate(
+async function update(id, task) {
+	await collection.findOneAndReplace(
 		{ _id: new ObjectId(id) },
-		{ $set: newPost },
+		{ ...task, _id: new ObjectId(id) },
 		{ returnDocument: 'after' }
 	);
 
-	//console.log(list);
-
-	return includeUser(newPost);
+	return task;
 }
 
 function seed() {
 	return collection.insertMany(list);
 }
 
+const create = async (post) => {
+	const result = await collection.insertOne(post);
+	post = await get(result.insertedId);
+
+	return includeUser(post);
+}
+
 module.exports = {
-	async create(post) {
-		post.id = ++hieghstId;
-
-		const result = await collection.insertOne(post);
-		post = await get(result.insertedId);
-
-		return includeUser(post);
-	},
+	create,
 	remove,
 	update,
 	async getList() {
