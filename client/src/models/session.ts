@@ -1,16 +1,42 @@
 import { reactive } from 'vue';
 
+import { loginReq, LoginRes } from './request';
+
 export interface ISession {
-	isLoggedIn: boolean;
+	avatar: string | null;
+	loggedIn: boolean;
+	token: string | null;
 	username: string | null;
 }
 
-export const session: ISession = reactive<ISession>({
-	isLoggedIn: false,
+export const session = reactive<ISession>({
+	avatar: null,
+	loggedIn: false,
+	token: null,
 	username: null,
 });
 
+export const startSession = async (username: string, password: string) => {
+	const res: LoginRes = await loginReq(username, password);
+
+	if(res.success !== true)
+		return res.errors[0];
+	else {
+		setSesion(res);
+		return true;
+	}
+};
+
+export const setSesion = (res: LoginRes) => {
+	session.avatar = res.data.avatar;
+	session.token = res.data.token;
+	session.username = res.data.username;
+	session.loggedIn = true;
+};
+
 export const endSession = () => {
-	session.isLoggedIn = false;
+	session.avatar = null;
+	session.loggedIn = false;
+	session.token = null;
 	session.username = null;
 };

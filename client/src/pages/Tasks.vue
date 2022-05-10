@@ -4,17 +4,22 @@ import { session } from '../models/session';
 import { ITask, tasks } from '../models/tasks';
 import router from '../router';
 import NavBar from '../components/nav.vue';
+import { getTasks } from '../models/request';
 
-if(!session.isLoggedIn) {
+if(!session.loggedIn) {
 	router.push('/');
+} else {
+	getTasks().then(() => {
+		tasks.value.sort((a, b) => a.done ? 1 : -1);
+	});
 }
+
 const tabsList = ['Assigned', 'Created', 'All'];
 const curTab = ref(tabsList[0]);
 
 const getTabCls = (tab: string) => tab === curTab.value ? 'tabLink activeTab' : 'tabLink';
 
 const fetchTodos = (e: ITask[]): ITask[] => {
-	e = e.sort((a, b) => a.done ? 1 : -1);
 	if(curTab.value == tabsList[0])
 		return e.filter(t => t.for === session.username);
 
@@ -47,7 +52,7 @@ const gotoAdd = () => {
 	</button>
 	<div class="tasks">
 		<div class="taskList">
-				<div class="card task" v-for="task in fetchTodos(tasks)" :key="task.title">
+				<div class="card task" v-for="task in fetchTodos(tasks)" :key="task._id">
 					<div class="title">{{task.title}}</div>
 					<div class="for">{{task.for}}</div>
 					<div class="date">{{task.date}} • {{task.by}}</div>

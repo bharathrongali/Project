@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { ref } from 'vue';
-import { session } from '../models/session';
+import { session, startSession } from '../models/session';
 import { users, getRandomAvatar } from '../models/users';
 import router from '../router';
 
@@ -14,7 +14,7 @@ const intf = ref(false);
 
 const label = ["Log In", "Sign Up"];
 
-const login = () => {
+const login = async () => {
 	wrong.value = '';
 
 	if(username.value === '' || password.value === '') {
@@ -22,14 +22,12 @@ const login = () => {
 		return;
 	}
 
-	const valid = users.value.filter(u => u.username === username.value && u.password === password.value).length > 0;
+	const res: boolean | string = await startSession(username.value, password.value);
 
-	if(valid) {
-		session.username = username.value;
-		session.isLoggedIn = true;
+	if(res === true) {
 		router.push('/tasks');
 	} else {
-		wrong.value = 'Invalid Credentials';
+		wrong.value = res;
 	}
 };
 
