@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { addTask, getAllUsers } from '../models/request';
 import { session } from '../models/session';
 import { tasks } from '../models/tasks';
 import { users } from '../models/users';
@@ -8,16 +9,32 @@ import router from '../router';
 const title = ref<string>('');
 const tfor = ref<string>('');
 const date = ref<string>('');
+const in_progress = ref(false);
+
+if(!session.loggedIn) {
+	router.push('/');
+} else {
+	getAllUsers();
+}
 	
-const addTask = () => {
+const handle_addTask = async () => {
 	if(!session.username) return;
-	tasks.value.push({
+
+	const task: any = {
 		by: session.username,
 		date: date.value,
 		done: false,
 		for: tfor.value,
 		title: title.value
-	});
+	};
+
+	in_progress.value = true;
+
+	await addTask(task);
+	
+	in_progress.value = false;
+	
+	tasks.value.push(task);
 
 	router.push('/tasks');
 }
@@ -45,7 +62,7 @@ const addTask = () => {
 				</div>
 
 				<input class="input is-normal" type="date" placeholder="Date" v-model="date" />
-				<button class="button is-normal" @click="addTask">Add</button>
+				<button class="button is-normal" :disabled="in_progress" @click="handle_addTask">Add</button>
 			</div>
   	</div>
 </template>

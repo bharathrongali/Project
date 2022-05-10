@@ -6,9 +6,7 @@ import router from '../router';
 import NavBar from '../components/nav.vue';
 import { getTasks } from '../models/request';
 
-if(!session.loggedIn) {
-	router.push('/');
-} else {
+if(session.loggedIn) {
 	getTasks().then(() => {
 		tasks.value.sort((a, b) => a.done ? 1 : -1);
 	});

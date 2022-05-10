@@ -1,19 +1,23 @@
 <script setup lang="ts">
-	import { users } from '../models/users';
-	import { endSession, session } from '../models/session';
-	import router from '../router';
+import { endSession, session } from '../models/session';
+import router from '../router';
 
-	
-	const logout = () => {
-		endSession();
-		router.push('/');
-	};
+if(!session.loggedIn) {
+	router.push('/');
+}
+
+const avatar = session.avatar || "";
+
+const logout = () => {
+	endSession();
+	router.push('/');
+};
 </script>
 
 <template>
 	<nav>
 		<div class="sessionContainer">
-			<img :src="users.filter(e => e.username === session.username)[0].avatar">
+			<img :src="avatar">
 			<p>{{ session.username }}</p>
 			<button @click="logout" class="button is-normal is-outlined">
 				<span class="icon is-small">

@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { join } = require('path');
 
 const userModel = require('./models/user');
 const usersController = require('./controllers/users');
@@ -33,7 +32,7 @@ app
 	})
 
 	.use('/api/users', usersController)
-	.use('/api/posts', /*requireAuth,*/ postsController)
+	.use('/api/posts', requireAuth, postsController)
 	.use((err, req, res, next) => {
 		console.error(err);
 
