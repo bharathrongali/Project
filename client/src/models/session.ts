@@ -32,8 +32,6 @@ export const setSession = (res: LoginRes) => {
 	session.token = res.data.token;
 	session.username = res.data.username;
 	session.loggedIn = true;
-
-	localStorage.setItem('session', JSON.stringify(session));
 };
 
 export const endSession = () => {

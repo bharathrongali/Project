@@ -1,17 +1,14 @@
 <script setup lang="ts">
-import { LoginRes } from './models/request';
-import { setSession } from './models/session';
+import { ISession, session } from './models/session';
 
 const storage = localStorage.getItem('session');
 
 if (storage !== null) {
-	const res: LoginRes = {
-		success: true,
-		errors: [],
-		data: JSON.parse(storage)
-	};
-
-	setSession(res);
+	const ses: ISession = JSON.parse(storage);
+	session.avatar = ses.avatar;
+	session.loggedIn = ses.loggedIn;
+	session.token = ses.token;
+	session.username = ses.username;
 }
 
 </script>
