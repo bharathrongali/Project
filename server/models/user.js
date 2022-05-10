@@ -8,8 +8,6 @@ const collection = db.db('DB_APP').collection('users');
 
 const SALT_ROUNDS = +process.env.SALT_ROUNDS;
 
-let hieghstId = 3;
-
 const list = [
 	{
 		username: 'Bob',
@@ -94,24 +92,17 @@ const seed = () => {
 	return collection.insertMany(l);
 };
 
+const create = async user => {
+	user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
+	const result = await collection.insertOne({...user, _id: undefined});
+	return await get(result.insertedId);
+};
+
 module.exports = {
 	collection,
 	seed,
 	getByHandle,
-	async create(user) {
-		user.id = ++hieghstId;
-
-		if (!user.handle) {
-			throw { statusCode: 400, message: 'Handle is required' };
-		}
-		user.password = await bcrypt.hash(user.password, +process.env.SALT_ROUNDS);
-		console.log(user);
-
-		const result = await collection.insertOne(user);
-		user = await get(result.insertedId);
-
-		return { ...user, password: undefined };
-	},
+	create,
 	remove,
 	update,
 	login,

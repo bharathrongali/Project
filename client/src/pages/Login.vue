@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import { ref } from 'vue';
+import { addUser } from '../models/request';
 import { session, startSession } from '../models/session';
 import { users, getRandomAvatar } from '../models/users';
 import router from '../router';
@@ -11,6 +12,7 @@ const confirm = ref('');
 const wrong = ref('');
 
 const intf = ref(false);
+const in_progress = ref(false);
 
 const label = ["Log In", "Sign Up"];
 
@@ -22,7 +24,11 @@ const login = async () => {
 		return;
 	}
 
+	in_progress.value = true;
+
 	const res: boolean | string = await startSession(username.value, password.value);
+	
+	in_progress.value = false;
 
 	if(res === true) {
 		router.push('/tasks');
@@ -31,7 +37,7 @@ const login = async () => {
 	}
 };
 
-const signup = () => {
+const signup = async () => {
 	wrong.value = '';
 
 	if(username.value === '' || password.value === '' || confirm.value === '') {
@@ -44,11 +50,19 @@ const signup = () => {
 		return;
 	}
 
-	users.value.push({
+	const user = {
 		avatar: getRandomAvatar(),
 		password: password.value,
 		username: username.value
-	});
+	};
+
+	in_progress.value = true;
+
+	await addUser(user);
+	
+	in_progress.value = false;
+
+	users.value.push(user);
 
 	wrong.value = "Sign Up Successful, Now you may login";
 
@@ -76,7 +90,7 @@ const changeInterface = () => intf.value = !intf.value;
 			<input class="input" type="text" placeholder="Username" v-model="username" />
 			<input class="input" type="password" placeholder="Password" v-model="password" />
 			<input v-if="intf === true" class="input" type="password" placeholder="Confirm" v-model="confirm" />
-			<button class="button" @click="action">
+			<button class="button" @click="action" :disabled="in_progress">
 				<span class="icon is-small">
 					<i class="fa-solid fa-right-to-bracket"></i>
 				</span>
