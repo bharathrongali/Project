@@ -22,16 +22,18 @@ export const startSession = async (username: string, password: string) => {
 	if(res.success !== true)
 		return res.errors[0];
 	else {
-		setSesion(res);
+		setSession(res);
 		return true;
 	}
 };
 
-export const setSesion = (res: LoginRes) => {
+export const setSession = (res: LoginRes) => {
 	session.avatar = res.data.avatar;
 	session.token = res.data.token;
 	session.username = res.data.username;
 	session.loggedIn = true;
+
+	localStorage.setItem('session', JSON.stringify(session));
 };
 
 export const endSession = () => {
@@ -39,4 +41,6 @@ export const endSession = () => {
 	session.loggedIn = false;
 	session.token = null;
 	session.username = null;
+
+	localStorage.setItem('session', JSON.stringify(session));
 };

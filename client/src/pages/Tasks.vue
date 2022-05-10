@@ -6,10 +6,12 @@ import router from '../router';
 import NavBar from '../components/nav.vue';
 import { getTasks, setTask } from '../models/request';
 
+const sortTasks = () => {
+	tasks.value.sort((a, b) => a.done ? 1 : -1);
+}
+
 if(session.loggedIn) {
-	getTasks().then(() => {
-		tasks.value.sort((a, b) => a.done ? 1 : -1);
-	});
+	getTasks().then(sortTasks);
 }
 
 const tabsList = ['Assigned', 'Created', 'All'];
@@ -29,6 +31,11 @@ const fetchTodos = (e: ITask[]): ITask[] => {
 
 const gotoAdd = () => {
 	router.push('/add');
+}
+
+const taskChange = async (task: ITask) => {
+	await setTask({...task, done: !task.done});
+	sortTasks();
 }
 
 </script>
@@ -55,7 +62,7 @@ const gotoAdd = () => {
 					<div class="for">{{task.for}}</div>
 					<div class="date">{{task.date}} • {{task.by}}</div>
 					<div class="field">
-						<input type="checkbox" v-model="task.done" @click="setTask({...task, done: !task.done})" />
+						<input type="checkbox" v-model="task.done" @click="taskChange(task)" />
 					</div>
 				</div>
 			</div>
