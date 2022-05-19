@@ -14,6 +14,8 @@ export type LoginRes = IRes<{
 	username: string;
 }>;
 
+export type autoSugRes = IRes<string[]>;
+
 export type getTasksRes = IRes<ITask[]>;
 export type setTaskRes = IRes<ITask>;
 export type getAllUsersRes = IRes<IUser[]>;
@@ -21,6 +23,7 @@ export type getAllUsersRes = IRes<IUser[]>;
 const loginUrl = 'http://localhost:3001/api/users/login';
 const usersUrl = 'http://localhost:3001/api/users';
 const tasksUrl = 'http://localhost:3001/api/posts';
+const autoSugUrl = 'http://localhost:3001/api/autoSug';
 
 const Auth = () => `JWT ${session.token}`;
 
@@ -101,4 +104,17 @@ export const getAllUsers = async () => {
 	const res: getAllUsersRes = await req.json();
 
 	users.value = res.data;
+};
+
+export const getSuggestions = async (chars: string) => {
+	const Authorization = Auth();
+	const req = await fetch(autoSugUrl, {
+		method: 'POST',
+		headers: { Authorization, 'Content-Type': 'application/json' },
+		body: JSON.stringify({ chars }),
+	});
+
+	const res: autoSugRes = await req.json();
+
+	return res;
 };

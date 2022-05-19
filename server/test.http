@@ -1,1 +1,6 @@
-POST http://localhost:3001/api/posts/seed
+POST http://localhost:3001/api/autoSug
+Content-Type: application/json
+
+{
+	"chars": "B"
+}

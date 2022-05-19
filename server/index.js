@@ -5,6 +5,7 @@ const cors = require('cors');
 const userModel = require('./models/user');
 const usersController = require('./controllers/users');
 const postsController = require('./controllers/posts');
+const autoSugController = require('./controllers/autosug');
 
 const { requireAuth } = require('./models/auth');
 
@@ -33,6 +34,7 @@ app
 
 	.use('/api/users', usersController)
 	.use('/api/posts', requireAuth, postsController)
+	.use('/api/autoSug', requireAuth, autoSugController)
 	.use((err, req, res, next) => {
 		console.error(err);
 
